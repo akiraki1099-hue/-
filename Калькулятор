@@ -1,0 +1,616 @@
+import tkinter
+from tkinter import *
+
+
+
+
+
+
+
+
+
+
+tost = ""
+tost2 = ""
+test2 = ""
+test = ""
+pmud = ""
+click = 0
+num1 = 0
+num2 = 0
+nun = ""
+
+# Это введение в строку + - * /
+
+def clickpl():
+    global pmud
+    pmud = "+"
+    ent.insert(END, "+")
+    print("Вы нажали на +")
+    global num1
+    global test
+    test = ent.get()
+    if test:
+        global tost
+        tost = ent.get()
+        test = (tost)
+        num1 = int((test[:-1]))
+    num1 = int((test[:-1]))
+    print(num1)
+
+
+
+def clickmi():
+    global pmud
+    pmud = "-"
+    ent.insert(END, "-")
+    print("Вы нажали на -")
+    global num1
+    global test
+    test = ent.get()
+    if test:
+        global tost
+        tost = ent.get()
+        test = (tost)
+        num1 = int((test[:-1]))
+        print(num1)
+    num1 = int((test[:-1]))
+    print(num1)
+
+
+def clickum():
+    global pmud
+    pmud = "*"
+    ent.insert(END, "*")
+    print("Вы нажали на *")
+    global num1
+    global test
+    test = ent.get()
+    if test:
+        global tost
+        tost = ent.get()
+        test = (tost)
+        num1 = int((test[:-1]))
+    num1 = int((test[:-1]))
+    print(num1)
+
+
+def clickde():
+    global pmud
+    pmud = "/"
+    ent.insert(END, "/")
+    print("Вы нажали на /")
+    global num1
+    global test
+    test = ent.get()
+    if test:
+        global tost
+        tost = ent.get()
+        test = (tost)
+        num1 = int((test[:-1]))
+    num1 = int((test[:-1]))
+    print(num1)
+
+
+# Цифры и их присаивания
+
+
+def zeroo():
+    global test2
+    ent.insert(END, "0")
+    if num1:
+        test2 = ent.get()
+        global tost2
+
+        before, sep, after = test2.partition("+")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("-")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("*")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("/")
+        if sep:
+            tost2 = after
+
+        global num2
+        num2 = int(tost2)
+        print(num2)
+
+
+def onee():
+    global test2
+    ent.insert(END, "1")
+    if num1:
+        test2 = ent.get()
+        global tost2
+
+        before, sep, after = test2.partition("+")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("-")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("*")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("/")
+        if sep:
+            tost2 = after
+
+        global num2
+        num2 = int(tost2)
+        print(num2)
+
+
+
+
+def twoo():
+    global test2
+    ent.insert(END, "2")
+    if num1:
+        test2 = ent.get()
+        global tost2
+
+        before, sep, after = test2.partition("+")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("-")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("*")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("/")
+        if sep:
+            tost2 = after
+
+        global num2
+        num2 = int(tost2)
+        print(num2)
+
+
+
+
+def threee():
+    global test2
+    ent.insert(END, "3")
+    if num1:
+        test2 = ent.get()
+        global tost2
+
+        before, sep, after = test2.partition("+")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("-")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("*")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("/")
+        if sep:
+            tost2 = after
+
+        global num2
+        num2 = int(tost2)
+        print(num2)
+
+
+
+
+def fourr():
+    global test2
+    ent.insert(END, "4")
+    if num1:
+        test2 = ent.get()
+        global tost2
+
+        before, sep, after = test2.partition("+")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("-")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("*")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("/")
+        if sep:
+            tost2 = after
+
+        global num2
+        num2 = int(tost2)
+        print(num2)
+
+
+
+
+def fivee():
+    global test2
+    ent.insert(END, "5")
+    if num1:
+        test2 = ent.get()
+        global tost2
+
+        before, sep, after = test2.partition("+")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("-")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("*")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("/")
+        if sep:
+            tost2 = after
+
+        global num2
+        num2 = int(tost2)
+        print(num2)
+
+
+
+def sixx():
+    global test2
+    ent.insert(END, "6")
+    if num1:
+        test2 = ent.get()
+        global tost2
+
+        before, sep, after = test2.partition("+")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("-")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("*")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("/")
+        if sep:
+            tost2 = after
+
+        global num2
+        num2 = int(tost2)
+        print(num2)
+
+
+
+
+def sevenn():
+    global test2
+    ent.insert(END, "7")
+    if num1:
+        test2 = ent.get()
+        global tost2
+
+        before, sep, after = test2.partition("+")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("-")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("*")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("/")
+        if sep:
+            tost2 = after
+
+        global num2
+        num2 = int(tost2)
+        print(num2)
+
+
+
+
+def eightt():
+    global test2
+    ent.insert(END, "8")
+    if num1:
+        test2 = ent.get()
+        global tost2
+
+        before, sep, after = test2.partition("+")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("-")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("*")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("/")
+        if sep:
+            tost2 = after
+
+        global num2
+        num2 = int(tost2)
+        print(num2)
+
+
+def ninee():
+    global test2
+    ent.insert(END, "9")
+    if num1:
+        test2 = ent.get()
+        global tost2
+
+        before, sep, after = test2.partition("+")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("-")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("*")
+        if sep:
+            tost2 = after
+
+        before, sep, after = test2.partition("/")
+        if sep:
+            tost2 = after
+
+        global num2
+        num2 = int(tost2)
+        print(num2)
+
+
+# Вычисления
+
+def equals():
+    global num1
+    global num2
+
+
+
+    if pmud == "+":
+        otv = num1 + num2
+        ent.delete(0, END)
+        ent.insert(0, otv)
+        print(otv)
+
+    if pmud == "-":
+        otv = num1 - num2
+        ent.delete(0, END)
+        ent.insert(0, otv)
+        print(otv)
+
+    if pmud == "*":
+        otv = num1 * num2
+        ent.delete(0, END)
+        ent.insert(0, otv)
+        print(otv)
+
+    if pmud == "/":
+        otv = num1 / num2
+        ent.delete(0, END)
+        ent.insert(0, otv)
+        print(otv)
+
+# Доплнительные
+
+def C():
+    ent.delete(0, END)
+    global tost, tost2, test, test2, pmud, num1, num2
+    num1 = 0
+    num2 = 0
+    tost = ""
+    tost2 = ""
+    test2 = ""
+    test = ""
+    pmud = ""
+
+
+
+
+
+
+
+
+
+root = Tk()
+root.geometry("500x500")
+root.resizable(width=False, height=False)
+root.config(bg="Black")
+root.title("+ И -")
+
+ent = Entry(root,
+            font=("Comic Sans MS", 30),
+            )
+ent.place(x=23, y=30, height=50, width=450)
+
+
+
+lbl1 = Label(root,
+             text="0",
+             font=("Comic Sans MS", 30),
+             fg="White",
+             bg="Black"
+             )
+lbl1.place(x=230, y=90)
+
+# Плюс, минуС, умножение и деление
+
+btnp = Button(root,
+              text="+",
+              command=clickpl,
+              font=("Comic Sans MS", 20),
+              bg="Green"
+              )
+btnp.place(x=450, y=120)
+
+btnm = Button(root,
+              text="-",
+              command=clickmi,
+              font=("Comic Sans MS", 20),
+              bg="Red"
+              )
+btnm.place(x=450, y=190) # y + 70
+
+btnu = Button(root,
+              text="*",
+              command=clickum,
+              font=("Comic Sans MS", 20),
+              bg="Yellow"
+              )
+btnu.place(x=450, y=260) # x + 70
+
+btnd = Button(root,
+              text="/",
+              command=clickde,
+              font=("Comic Sans MS", 20),
+              bg="Orange"
+              )
+btnd.place(x=450, y=330) # x + 70
+
+btnr = Button(root,
+              text="=",
+              command=equals,
+              font=("Comic Sans MS", 25),
+              bg="White"
+              )
+btnr.place(x=450, y=400)
+
+# Цифры!
+
+btn0 = Button(root,
+              text="0",
+              command=zeroo,
+              font=("Comic Sans MS", 20),
+              bg="Black",
+              fg="orange"
+              )
+btn0.place(x=10, y=450, width=430, height=30)
+
+btn1 = Button(root,
+              text="1",
+              command=onee,
+              font=("Comic Sans MS", 20),
+              bg="Black",
+              fg="orange"
+              )
+btn1.place(x=10, y=360, width=80, height=80)
+
+btn2 = Button(root,
+              text="2",
+              command=twoo,
+              font=("Comic Sans MS", 20),
+              bg="Black",
+              fg="orange"
+              )
+btn2.place(x=97, y=360, width=80, height=80)
+
+btn3 = Button(root,
+              text="3",
+              command=threee,
+              font=("Comic Sans MS", 20),
+              bg="Black",
+              fg="orange"
+              )
+btn3.place(x=185, y=360, width=80, height=80)
+
+btn4 = Button(root,
+              text="4",
+              command=fourr,
+              font=("Comic Sans MS", 20),
+              bg="Black",
+              fg="orange"
+              )
+btn4.place(x=273, y=360, width=80, height=80)
+
+btn5 = Button(root,
+              text="5",
+              command=fivee,
+              font=("Comic Sans MS", 20),
+              bg="Black",
+              fg="orange"
+              )
+btn5.place(x=360, y=360, width=80, height=80)
+
+btn6 = Button(root,
+              text="6",
+              command=sixx,
+              font=("Comic Sans MS", 20),
+              bg="Black",
+              fg="orange"
+              )
+btn6.place(x=10, y=275, width=80, height=80)
+
+btn7 = Button(root,
+              text="7",
+              command=sevenn,
+              font=("Comic Sans MS", 20),
+              bg="Black",
+              fg="orange"
+              )
+btn7.place(x=97, y=275, width=80, height=80)
+
+btn8 = Button(root,
+              text="8",
+              command=eightt,
+              font=("Comic Sans MS", 20),
+              bg="Black",
+              fg="orange"
+              )
+btn8.place(x=185, y=275, width=80, height=80)
+
+btn9 = Button(root,
+              text="9",
+              command=ninee,
+              font=("Comic Sans MS", 20),
+              bg="Black",
+              fg="orange"
+              )
+btn9.place(x=273, y=275, width=80, height=80)
+
+# Дополнительные!
+
+btnc = Button(root,
+              text="C",
+              command=C,
+              font=("Comic Sans MS", 50),
+              fg="Black",
+              bg="Orange"
+              )
+btnc.place(x=360, y=275, width=80, height=80)
+
+
+
+
+
+
+
+root.mainloop()
