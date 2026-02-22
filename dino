@@ -1,0 +1,356 @@
+
+import pygame
+from pygame import *
+import sys
+import time
+import random
+
+END = False
+reset_time = 0
+
+x1=100; y1=230
+WIDTH=30; HEIGHT=30
+SPEED = 10
+otchet_limits = 2000
+cactus_speed_flimit = 3
+
+i = 200000
+
+player_color = (250, 250, 250)
+
+
+
+# Установи всем спрайты! И реши проблему с поворотами
+
+
+
+
+
+
+# Class player
+
+
+
+
+
+
+
+class Player(sprite.Sprite): # создали класс Player
+    def __init__(self, x1, y1):  # создаём параметры x y. Наверное
+        sprite.Sprite.__init__(self)# Я не уверен. Но я думаю для спрайта параметры
+        self.XV = 0  # cкорость перемещения
+        self.YV = 0
+        self.rotate_check = 0
+        self.rotate_left = 180
+        self.rotate_right = 180
+        self.pong = True
+        self.power_jump = 7
+        self.gravity = 1
+        self.startX = x1
+        self.startY = y1
+        self.image = pygame.image.load("pngwing.com.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (65, 65))
+        self.image = pygame.transform.rotate(self.image, self.rotate_check)
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x1, y1)
+        self.rect = self.rect.inflate(-20 , -15)
+
+    def update(self, left, right, up, down):
+        if left:
+            self.XV = SPEED
+            self.rect.x -= self.XV
+            self.rotate_check = pygame.transform.rotate(self.image, self.rotate_left)
+
+        if right:
+            self.XV = SPEED
+            self.rect.x += self.XV
+            self.rotate_check = pygame.transform.rotate(self.image, self.rotate_right)
+
+
+        if down:
+            self.YV = SPEED
+            self.rect.y += self.YV
+
+        if not (left or right):
+            self.XV = 0
+        # if not (up or down):
+        #     self.YV = 0
+
+
+        # Прыжок
+
+        if up:
+            self.YV = -self.power_jump
+            #self.rect.y -= self.YV
+            self.pong = False
+
+        # Гравитация
+        if not self.pong:
+            self.gravity += 0.2
+            self.rect.y += self.gravity
+
+        self.rect.y += self.YV
+
+
+        if self.rect.colliderect(ground_rect):
+            if self.rect.y > 0:
+                self.rect.bottom = ground_rect.top
+                self.YV = 0
+                self.pong = True
+                self.gravity = 1
+
+
+    def draw(self, root):
+        root.blit(self.image, (self.rect.x, self.rect.y))
+
+# Class player закончился
+
+x = 800
+y = 180
+
+
+
+class Cactus(sprite.Sprite):
+    def __init__(self, x, y):
+        sprite.Sprite.__init__(self)
+        self.XV = 0
+        self.YV = 0
+        self.cactus_speed = 3
+        self.speed_upd = 0
+        self.WIDTH = 30
+        self.HEIGHT = 50
+        self.startX = x
+        self.startY = y
+        self.xcac = xcac
+        self.cactus_color = 41, 206, 23
+        self.image = pygame.image.load("Cac_image.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (45, 66))
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (self.startX, self.startY)
+        self.rect.center = (800, 180)
+        self.rect = self.rect.inflate(-27, -35)
+
+
+
+    def update(self, left, up, right, down):
+
+        if self.rect.x < -30:
+            self.rect.x = self.xcac
+        self.XV = self.cactus_speed
+        self.rect.x -= self.XV
+
+
+        if otchet >= otchet_limits:
+            if otchet - self.speed_upd >= 20000:
+                self.cactus_speed += 1
+                self.speed_upd = otchet
+        else:
+            self.speed_upd = 0
+            self.cactus_speed = 3
+
+
+
+    # def draw(self, root):
+    #     if END:
+    #         root.blit(self.image, (self.rect.x, self.rect.y))
+
+gamex = 75; gamey = 75
+
+class Game_over(sprite.Sprite):
+    def __init__(self, gamex, gamey):
+        sprite.Sprite.__init__(self)
+        self.startX = gamex
+        self.startY = gamey
+        self.Width = 100
+        self.Height = 75
+        self.image = pygame.image.load("GAME_OVER.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (900, 700))
+        self.rect = self.image.get_rect()
+        self.rect.center = (400, 200)
+
+    def draw(self, root):
+        if END:
+            root.blit(self.image, (self.rect.x, self.rect.y))
+
+
+
+
+
+
+
+
+pygame.init()
+root = pygame.display.set_mode((800,400))
+clock = pygame.time.Clock()
+
+
+
+
+
+
+running = True
+
+xcac = random.randint(800, 900)
+
+GG = Player(150, 200)
+cac = Cactus(800, 180)
+cactus_speed = cac.cactus_speed
+cacs = pygame.sprite.Group()
+
+cacxF = (980)
+cacyF = (165)
+cacs.add(Cactus(cacxF, cacyF))
+cacFSX = (1030)
+cacFSY = (165)
+cacs.add(Cactus(cacFSX, cacFSY))
+
+# Три кактуса
+cacXSecond = (1280)
+cacYSecond = (165)
+cacs.add(Cactus(cacXSecond, cacYSecond))
+cacXThird = (1320)
+cacYThird = (165)
+cacs.add(Cactus(cacXThird, cacYThird))
+cacXFour = (1220)
+cacYFour = (165)
+cacs.add(Cactus(cacXFour, cacYFour))
+
+GAME_OVER = Game_over(gamex, gamey)
+left = right = False
+up = down = False
+
+xw1=820; yw1=230; x3=0; y3=0
+x2=0; y2=0; X4=0; Y4=0
+
+
+
+
+all_sprite = pygame.sprite.Group()
+all_sprite.add(GG, cac)
+
+otchet = 0
+
+
+
+ground_color = 50, 50, 50
+ground_rect = pygame.Rect(0, 230, 800, 400)
+
+
+
+
+wall_1 = 50, 50, 50
+wall_1_rect = Rect(xw1, yw1, 30, 30)
+
+hide = False
+start = False
+
+player_rdt = []
+
+timer = pygame.font.Font(None, 35)
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+           running = False
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_d:
+                right = False
+            if event.key == pygame.K_a:
+                left = False
+            if event.key == pygame.K_s:
+                down = False
+            if event.key == pygame.K_w:
+                up = False
+            if event.key == pygame.K_SPACE:
+                if END:
+                    END = False
+                    otchet = 0
+                    reset_time = pygame.time.get_ticks()
+                    GG.rect.x = 150
+                    GG.rect.y = 200
+                    cac.rect.x = 800
+                    cactus_speed = 3
+                    for c in cacs:
+                        c.rect.x = c.startX
+                        c.rect.y = c.startY
+                    GG.YV = 0
+
+
+
+
+    timer_text = timer.render(str(otchet), True, (180, 0, 0))
+
+    if END == False:
+        otchet = pygame.time.get_ticks() - reset_time
+
+
+
+
+    root.fill("Black")
+
+
+    keys = pygame.key.get_pressed()
+
+
+
+    if keys[pygame.K_d]:
+        right = True
+    if keys[pygame.K_a]:
+        left = True
+    if keys[pygame.K_s]:
+        down = True
+    if keys[pygame.K_w]:
+        up = True
+    if keys[pygame.K_e]:
+        print(cactus_speed)
+
+
+
+
+
+    if GG.rect.y < 0:
+        GG.rect.y = 0
+    # if GG.rect.y > 230:
+    #     GG.rect.y = 230
+    if GG.rect.x < 0:
+        GG.rect.x = 0
+    if GG.rect.x > 800 - 30:
+        GG.rect.x = 800 - 30
+
+
+
+    if sprite.spritecollide(GG, cacs, False):
+        END = True
+
+    if GG.rect.colliderect(cac.rect):
+        END = True
+
+
+
+
+
+
+    pygame.draw.rect(root, ground_color, ground_rect)
+
+
+    if not END:
+
+        all_sprite.update(left, right, up, down)
+        cacs.update(left, right, up, down)
+    else:
+
+        GAME_OVER.draw(root)
+
+    root.blit(timer_text, (700, 10))
+
+    all_sprite.draw(root)
+    cacs.draw(root)
+
+
+
+
+
+    pygame.display.flip()
+    clock.tick(60)
+pygame.quit()
+
