@@ -1,0 +1,59 @@
+# include <iostream>
+# include <string>
+# include <cmath>
+
+int main(){
+    setlocale(LC_ALL, "Russian");
+
+    std::string sandwich = "";
+
+    std::cout << "Input your sandwich,\nfor example: aaBBaa: ";
+    std::cin >> sandwich;
+
+    char first_letter = sandwich[0];    char last_letter = sandwich[sandwich.size() - 1];
+    int first_letter_lenght = 0;        int last_letter_lenght = 0;
+    char filling_letter;                bool filling_letter_check = false;
+    bool check = true;
+       
+
+
+    for (int i = 0; sandwich[i] == first_letter; ++i){
+        first_letter_lenght++ ;
+    }
+    
+    if (filling_letter_check == false){
+        for (int x = first_letter_lenght; sandwich[x] != first_letter && sandwich[x] != last_letter; ++x){
+            filling_letter = sandwich[x];
+            filling_letter_check = true;
+            if (filling_letter != first_letter && filling_letter != last_letter && sandwich[x + 1] == filling_letter)
+                check = false;
+
+        }
+    }
+    
+    for (int o = sandwich.size() - 1; sandwich[o] == last_letter; --o){
+        last_letter_lenght++ ;
+    }
+
+
+
+    if (first_letter == last_letter && first_letter_lenght == last_letter_lenght &&
+        filling_letter == filling_letter && check == false){
+        std::cout << first_letter << " - " <<first_letter_lenght << "\n";
+        std::cout << last_letter << " - " << last_letter_lenght << "\n";
+        std::cout << filling_letter << " - " << check << "\n"; 
+
+        std::cout << "Yeap, your sandwich is\nTrue sandwich - " << sandwich;
+    }
+    else{
+        std::cout << first_letter << " - " <<first_letter_lenght << "\n";
+        std::cout << last_letter << " - " << last_letter_lenght << "\n";
+        std::cout << filling_letter << " - " << check <<  "\n";  
+
+        std::cout << "nuh, your sandwich is\nNOT True sandwich!";
+    }
+
+
+    return 0;
+
+}
