@@ -1,0 +1,26 @@
+# include <string>
+# include <iostream>
+
+int main(){
+    std::string meals[5];
+
+    std::cout << "We go to buy meals!\n";
+
+    for (int i=0; i < 5; ++i){
+        std::cout << "You want buy: ";
+        std::getline(std::cin, meals[i]);
+    }
+    
+    for (int x=0; x < 5; ++x){
+        if (x == 0){
+            std::cout << "You buy: " << meals[x];
+        }
+        else{
+            std::cout << ", " << meals[x];
+        }
+        
+    }
+
+
+    return 0;
+}
