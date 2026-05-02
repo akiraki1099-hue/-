@@ -1,0 +1,81 @@
+#include <iostream>
+#include <vector>
+#include <memory>
+#include <numeric>
+#include <algorithm>
+#include <cmath>
+
+
+using std::cout;
+using std::cin;
+using std::endl;
+using std::string;
+
+// Sooo, i use T
+
+template <typename T>
+class Processor{
+public:
+    void process(T val){
+        // For int
+        if constexpr(std::is_same_v<T, int>){
+            cout << "Processing int: . . ." << endl;
+            val = val* val;
+            cout << val;
+        }
+        // For float
+        else if constexpr(std::is_same_v<T, float>){
+            cout << "Processing float: . . ." << endl;
+            val = std::round(val * 100.0) / 100.0;
+            cout << val;
+        }
+        // For string
+        else if constexpr(std::is_same_v<T, string>){
+            cout << "Processing string: . . ." << endl;
+            for (auto& i : val){
+                char letter = i;
+                cout << letter << endl;
+            }
+        }
+        // For vector
+        else{
+            if constexpr(std::is_same_v<T, std::vector<int>>){
+                int sum = std::accumulate(val.begin(), val.end(), 0);
+                cout << "Sum of vector is: " << sum << endl;
+            }
+            else{
+                throw("This works onli with int");
+            }
+            
+        }
+    }
+};
+
+int main(){
+    system("cls");
+
+// LETS GO GAMBLING! Sorry, LETS GO TEST IT!
+
+    Processor<int> intProc;
+    Processor<float> floatProc;
+    Processor<string> stringProc;
+    Processor<std::vector<int>> vectorProc;
+
+    cout << "Test of int - ";
+    intProc.process(11);
+    
+    cout << "\nTest of float - ";
+    floatProc.process(3.156f);
+
+    cout << "\nTest of  - string" << endl;
+    stringProc.process("Hello - World!");
+
+
+    
+    cout << "\nTest of VECTOR! - " << endl;
+    std::vector<int> myItems = {5, 5, 5, 5};
+    vectorProc.process(myItems);
+
+// This absolitly works!
+    cout << "Main is end" << endl;
+}
