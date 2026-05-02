@@ -1,0 +1,52 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <ctime>
+
+
+
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main(){
+    bool stop = false;
+    unsigned int key = 0;
+    cout << "Enterr key^ ";
+    cin >> key;
+
+    while (stop == false){
+        unsigned int tcount = 0000;
+        unsigned int fcount = 10000;
+        
+
+        // I using 'for'.
+        
+        if (tcount <= 10000){
+            for (int i = 0; i < 10000; ++i){
+                tcount += 1;
+                fcount -= 1;
+                cout << tcount << " t - key: " << key << endl;
+                cout << fcount << " f - key: " << key << endl;
+                if (tcount == key || fcount == key){
+                    if (tcount == key){
+                        cout << key << " == t" << tcount << endl;
+                    }
+                    if (fcount == key){
+                        cout << key << " == f" << fcount << endl;
+                    }
+                    stop = true;
+                    break;
+                }
+            }
+        }
+
+
+    }
+
+
+
+}
