@@ -1,0 +1,425 @@
+#define SDL_MAIN_HANDLED
+#include <SDL2/SDL.h>
+#include <string>
+#include <cmath>
+#include <chrono>
+#include <thread>
+#include <iostream>
+#include <vector>
+
+struct Petals{
+    double petalCX; double petalCY;
+    double petalSX; double petalSY;
+    double petalR; double damage;
+    double petalangle; double health;
+    double petalDX; double petalsnowdistance;  
+    double petalDY; double petaldistance; 
+    double petalKX; double petalNX;         
+    double petalKY; double petalNY;
+    double p; double petaloverlap; 
+    double petalsnowDX;
+    double petalsnowDY;
+
+    double reload;
+    bool broken;
+};
+
+void DrawCircle(SDL_Renderer* renderer, double centerX, double centerY, double radius, int R, int G, int B, int I){
+    SDL_SetRenderDrawColor(renderer, R, G, B, I);
+    for (int dx = -radius; dx <= radius; ++dx) {
+        for (int dy = -radius; dy <= radius; ++dy) {
+            if ((dx * dx + dy * dy) <= (radius * radius)) {
+                SDL_RenderDrawPoint(renderer, centerX + dx, centerY + dy);
+            }
+        }
+    }
+
+}
+
+
+extern "C" int main(int argc, char* argv[]){
+    system("cls");
+    SDL_Init(SDL_INIT_VIDEO);
+
+    SDL_Window* window = SDL_CreateWindow("ArenaGame", 100, 100, 500, 500, SDL_WINDOW_SHOWN);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+    SDL_Event event;
+    bool isRunning = true;
+
+    //! ========================================================================================================================================
+
+    bool start = false;
+    bool shoot = false;
+    bool brokensnow = false;
+    bool regen = false;
+    double wakeup = 0;
+    //-------------------------------------------
+    //-------------------------------------------
+    double circle1centerX = 125;
+    double circle1centerY = 225;
+    double circle2centerX = 375;
+    double circle2centerY = 225;
+
+    double speed1x = 0.2; double speed1y = 0.2;
+    double speed2x = -0.3; double speed2y = -0.3;
+    double circleR1 = 25; double circleR2 = 25;
+    //-------------------------------------------
+    double snowballspeedx = 0.8; double currentsnowspeedx = 0.8;
+    double snowballspeedy = 0.8; double currentsnowspeedy = 0.8;
+    double snowballR = 10;
+    double snowballCX = circle1centerX + 10; 
+    double snowballCY = circle1centerY;
+    double snowballHP = 5;
+    double snowdamage = 15;
+    //-------------------------------------------
+    std::vector<Petals>basics;
+    double PeriR = 50.0;
+        for(int i = 0; i < 5; ++i){
+            Petals newbasics;
+            newbasics.petalangle = i * (2 * 3.14159265 / 5);
+            newbasics.petalCX = circle2centerX + PeriR * cos(newbasics.petalangle);
+            newbasics.petalCY = circle2centerY + PeriR * sin(newbasics.petalangle);
+            newbasics.petalR = 8;
+            
+            newbasics.petalSX = 0.1;     newbasics.petalDX = 0;
+            newbasics.petalSY = 0.1;     newbasics.petalDY = 0;
+            newbasics.petaldistance = 0; newbasics.petalsnowdistance  = 0;
+            newbasics.petalNX = 0;       newbasics.petalKX = 0;
+            newbasics.petalNY = 0;       newbasics.petalKY = 0;
+            newbasics.petaloverlap = 0;  newbasics.p = 0;
+            
+
+            newbasics.health = 30;
+            newbasics.damage = 5;
+            newbasics.broken = false;
+            newbasics.reload = 0;
+        basics.push_back(newbasics);
+    }
+    double basicSpeed = 0.1;
+    //-------------------------------------------
+    int health1 = 100; bool circle1DIE = false; 
+    int health2 = 100; bool circle2DIE = false;
+
+    //! ========================================================================================================================================
+
+    while(isRunning){
+        while(SDL_PollEvent(&event)){
+            if(event.type == SDL_QUIT){
+                isRunning = false;
+            }
+        }
+        const Uint8* state = SDL_GetKeyboardState(NULL);
+
+        if (state[SDL_SCANCODE_S]){
+            start = true;
+        }
+
+        if(state[SDL_SCANCODE_W]){
+            circle1DIE = false;
+            circle2DIE = false;
+            health1 = 100; health2 = 100;
+            std::cout << "Circle1DIE - " << circle1DIE << std::endl;
+            std::cout << "Circle2DIE - " << circle2DIE << std::endl;
+        }
+
+        
+
+        if(state[SDL_SCANCODE_D]){
+            std::cout << "Circle1 hp - " << health1 << std::endl;
+            std::cout << "Circle2 hp - " << health2 << std::endl;
+            std::cout << "Snowball hp - " << snowballHP << std::endl;
+            for(size_t i = 0; i < basics.size(); ++i){
+                std::cout << "Petals health - " << basics[i].health << std::endl;
+            }
+        }
+        if(state[SDL_SCANCODE_A]){
+            circle1centerX = 125;
+            circle1centerY = 225;
+            circle2centerX = 375;
+            circle2centerY = 225;
+        }
+
+
+
+
+        if(!circle1DIE && !circle1DIE){
+            if (start){
+                circle1centerX += speed1x; circle1centerY += speed1y; 
+                circle2centerX += speed2x; circle2centerY += speed2y; 
+            }
+        }
+        //-----------------------------------------------------
+
+
+        double dx = circle2centerX - circle1centerX;
+        double dy = circle2centerY - circle1centerY;
+        double snowdx = circle2centerX - snowballCX;
+        double snowdy = circle2centerY - snowballCY;
+
+        double snowdistance = std::sqrt(snowdx*snowdx + snowdy*snowdy);
+        double distance = std::sqrt(dx*dx + dy*dy);
+        double angle = std::atan2(dy, dx);
+
+        double spinspeed = 0.01;
+        double orbit = 50;
+        
+        if(!brokensnow){
+            if(!shoot){  
+                snowballCX = circle1centerX + std::cos(angle) * circleR1; 
+                snowballCY = circle1centerY + std::sin(angle) * circleR1;
+            }
+        }
+
+        //----------------------------------------------------
+
+        SDL_SetRenderDrawColor(renderer, 255, 153, 51, 255);
+        SDL_RenderClear(renderer);
+    //! ========================================================================================================================================
+
+        SDL_Rect wallLrect;                             SDL_Rect wallRrect;
+        wallLrect.x = 0; wallLrect.y = 0;               wallRrect.x = 495; wallRrect.y = 0;
+        wallLrect.w = 5; wallLrect.h = 500;             wallRrect.w = 5; wallRrect.h = 500;
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderFillRect(renderer, &wallLrect);       SDL_RenderFillRect(renderer, &wallRrect);
+
+
+        SDL_Rect wallUrect;                             SDL_Rect wallDrect;              
+        wallUrect.x = 0; wallUrect.y = 0;               wallDrect.x = 0; wallDrect.y = 495;
+        wallUrect.w = 500; wallUrect.h = 5;             wallDrect.w = 500; wallDrect.h = 5;
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderFillRect(renderer, &wallUrect);       SDL_RenderFillRect(renderer, &wallDrect);
+
+    //! ========================================================================================================================================
+
+        if(circle1centerX - circleR1 <= 5){
+            speed1x= -speed1x; 
+        } 
+        if(circle1centerX + circleR1 >= 495){
+            speed1x= -speed1x; 
+        } 
+        if(circle1centerY - circleR1 <= 5){
+            speed1y= -speed1y;
+        } 
+        if(circle1centerY + circleR1 >= 495){
+            speed1y= -speed1y;
+        }
+
+        if(circle2centerX - circleR2 <= 5){
+            speed2x= -speed2x; 
+        } 
+        if(circle2centerX + circleR2 >= 495){
+            speed2x= -speed2x; 
+        } 
+        if(circle2centerY - circleR2 <= 5){
+            speed2y= -speed2y;
+        } 
+        if(circle2centerY + circleR2 >= 495){
+            speed2y= -speed2y;
+        }
+    
+        if(circle1centerX - circleR1 <= 5){
+            circle1centerX + 0.1;
+        }
+        if(circle1centerX + circleR1 >= 495){
+            circle1centerX - 0.1;
+        }
+        if(circle1centerY - circleR1 <= 5){
+            circle1centerY + 0.1;
+        }
+        if(circle1centerY + circleR1 >= 495){
+            circle1centerY - 0.1;
+        }
+        
+        if(circle2centerX - circleR2 <= 5){
+            circle2centerX + 0.1;
+        }
+        if(circle2centerX + circleR2 >= 495){
+            circle2centerX - 0.1;
+        }
+        if(circle2centerY - circleR2 <= 5){
+            circle2centerY + 0.1;
+        }
+        if(circle2centerY + circleR2 >= 495){
+            circle2centerY - 0.1;
+        }
+
+        if(snowballCX - snowballR <= 5){
+            snowballHP -= 1;
+            currentsnowspeedx= -currentsnowspeedx;
+        } 
+        if(snowballCX - snowballR >= 495){
+            snowballHP -= 1;
+            currentsnowspeedx= -currentsnowspeedx;
+        }
+        if(snowballCY - snowballR <= 5){
+            snowballHP -= 1;
+            currentsnowspeedy= -currentsnowspeedy;
+        }
+        if(snowballCY - snowballR >= 495){
+            snowballHP -= 1;
+            currentsnowspeedy= -currentsnowspeedy;
+        }
+
+        //-------------------------------------------- SNOWBALL
+        if(SDL_GetTicks() >= wakeup){
+            shoot = true;
+            currentsnowspeedx = std::cos(angle) * snowballspeedx;
+            currentsnowspeedy = std::sin(angle) * snowballspeedy;
+            wakeup = SDL_GetTicks() + 4000;
+        }
+
+        if(shoot){
+            snowballCX += currentsnowspeedx;
+            snowballCY += currentsnowspeedy;
+        }
+
+        if(snowdistance < (snowballR + circleR2)){
+            health2 -= 15;
+            shoot = false;
+    
+            //if(shoot){
+            //    double snowoverlap = (snowballR + circleR2) - snowdistance;
+            //    double snownx = snowdx / snowdistance;
+            //    double snowny = snowdy / snowdistance;
+            //    circle2centerX += snownx * (snowoverlap / 2);
+            //    circle2centerY += snowny * (snowoverlap / 2);
+            //    double snowkx = snowballspeedx - speed2x;
+            //    double snowky = snowballspeedy - speed2y;
+            //    double p = snowkx * snownx + snowky * snowny;
+//
+            //    if(p > 0){
+            //        speed2x += p* snownx;
+            //        speed2y += p* snowny;
+            //    }
+            //} 
+        }
+        
+        //-------------------------------------------- petalS
+        
+                
+
+        if(!circle2DIE){
+            for(size_t i = 0; i < basics.size(); ++i){
+                if(basics[i].broken)continue;
+                basics[i].petalDX = circle1centerX - basics[i].petalCX;
+                basics[i].petalDY = circle1centerY - basics[i].petalCY;
+                basics[i].petalsnowDX = snowballCX - basics[i].petalCX;
+                basics[i].petalsnowDY = snowballCY - basics[i].petalCY;
+                basics[i].petalsnowdistance = std::sqrt(basics[i].petalsnowDX*basics[i].petalsnowDX + basics[i].petalsnowDY*basics[i].petalsnowDY);
+                basics[i].petaldistance = std::sqrt(basics[i].petalDX*basics[i].petalDX + basics[i].petalDY*basics[i].petalDY);
+
+                
+                if(basics[i].petalsnowdistance < (basics[i].petalR + snowballR)){
+                    basics[i].health -= snowdamage;
+                    snowballHP -= basics[i].damage;
+                    shoot = false;
+                    snowballCX = circle1centerX + std::cos(angle) * circleR1;
+                    snowballCY = circle1centerY + std::sin(angle) * circleR1;
+                
+                    if(snowballHP <= 0){
+                        snowballHP = 5;
+                        snowballCX = circle1centerX + std::cos(angle) * circleR1;
+                        snowballCY = circle1centerY + std::sin(angle) * circleR1;
+                        wakeup = SDL_GetTicks() + 4000;
+                    }
+                }
+
+                if(basics[i].petaldistance < (basics[i].petalR + circleR1)){
+                    health1 -= 10;
+                    basics[i].health -= 30;
+
+                    basics[i].petaloverlap = (basics[i].petalR + circleR1) - basics[i].petaldistance;
+                    basics[i].petalNX = basics[i].petalDX / basics[i].petaldistance;
+                    basics[i].petalNY = basics[i].petalDY / basics[i].petaldistance;
+                    circle1centerX += basics[i].petalNX * (basics[i].petaloverlap / 2);
+                    circle1centerX += basics[i].petalNY * (basics[i].petaloverlap / 2);
+                    basics[i].petalKX = basics[i].petalSX - speed1x;   
+                    basics[i].petalKY = basics[i].petalSY - speed1y;
+                    basics[i].p = basics[i].petalKX * basics[i].petalNX + basics[i].petalKY * basics[i].petalNY;
+
+                    //if(basics[i].p > 0){
+                    //    speed1x += basics[i].p* basics[i].petalCX;
+                    //    speed1y += basics[i].p* basics[i].petalCY;
+                    //}
+                }
+            }
+
+            for(size_t i = 0; i < basics.size(); ++i){
+                if(basics[i].health <= 0 && !basics[i].broken){
+                    basics[i].petalCX = 10000000;
+                    basics[i].petalCY = 10000000;
+                    basics[i].broken = true;
+                    basics[i].reload = SDL_GetTicks() + 6000;
+                }
+                if(basics[i].broken && SDL_GetTicks() >= basics[i].reload){
+                    basics[i].broken = false;
+                    basics[i].health = 30;
+                }
+            }
+        
+            for(size_t i = 0; i < basics.size(); ++i){
+                basics[i].petalangle += spinspeed;
+                if(!basics[i].broken){
+                    basics[i].petalCX = circle2centerX + orbit * cos(basics[i].petalangle);
+                    basics[i].petalCY = circle2centerY + orbit * sin(basics[i].petalangle);
+                    DrawCircle(renderer, basics[i].petalCX, basics[i].petalCY, basics[i].petalR, 232, 232, 232, 255);
+                }
+            }
+        }
+        //--------------------------------------------
+
+        if(distance == 0){distance = 0.1;}
+
+        if(!circle1DIE && !circle2DIE){
+            if(distance < (circleR1 + circleR2)){
+            
+                double overlap = (circleR1 + circleR2) - distance;
+                double nx = dx / distance;
+                double ny = dy / distance;
+                circle1centerX -= nx * (overlap / 2); circle2centerX += nx * (overlap / 2);
+                circle1centerY -= ny * (overlap / 2); circle2centerY += ny * (overlap / 2);
+                double kx = speed1x - speed2x;
+                double ky = speed1y - speed2y;
+                double p = kx * nx + ky * ny;
+                std::cout << p << std::endl;
+
+                if(p > 0){
+                    speed1x -= p* nx;
+                    speed1y -= p* ny;
+                    std::cout << speed1x << std::endl;
+                    std::cout << speed1y << std::endl;
+
+                    speed2x += p* nx;
+                    speed2y += p* ny;
+                    std::cout << speed2x << std::endl;
+                    std::cout << speed2y << std::endl;
+                } 
+            }
+        }   
+
+        if(health1 <= 0){
+            circle1DIE = true;
+        }
+        if(health2 <= 0){
+            circle2DIE = true;
+        }
+        
+        //===================================================================================
+        if(!circle1DIE){
+            DrawCircle(renderer, circle1centerX, circle1centerY, circleR1, 255, 78, 78, 255);
+        }
+        if(!circle2DIE){
+            DrawCircle(renderer, circle2centerX, circle2centerY, circleR2, 120, 78, 255, 255);
+            DrawCircle(renderer, snowballCX, snowballCY, snowballR, 232, 232, 232, 255);
+        }
+        
+        
+
+        SDL_RenderPresent(renderer);
+    }
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    //! ========================================================================================================================================
+}
